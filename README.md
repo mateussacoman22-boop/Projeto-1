@@ -4,7 +4,7 @@ Aplicação web completa em Python + Flask para controle financeiro pessoal, com
 
 ## Funcionalidades
 
-- Cadastro de receitas e despesas (descrição, valor, categoria e data).
+- Cadastro de receitas e despesas (descrição, valor e categoria), com **data automática do dia atual**.
 - Dashboard com resumo do mês atual (receitas, despesas e saldo).
 - Listagem e filtro de transações por tipo, mês e ano.
 - Definição e consulta de orçamento mensal.

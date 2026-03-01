@@ -48,6 +48,7 @@ def create_app(test_config: dict | None = None) -> Flask:
             transacoes=transacoes,
             resumo=resumo,
             filtros={"tipo": tipo, "mes": mes, "ano": ano},
+            hoje=date.today().isoformat(),
         )
 
     @app.post("/transacoes")
@@ -59,9 +60,9 @@ def create_app(test_config: dict | None = None) -> Flask:
                 descricao=request.form["descricao"],
                 valor=float(request.form["valor"]),
                 categoria=request.form["categoria"],
-                data_transacao=request.form.get("data") or None,
+                data_transacao=None,
             )
-            flash("Transação adicionada com sucesso.", "success")
+            flash("Transação adicionada com sucesso (data automática de hoje).", "success")
         except ValueError as exc:
             flash(str(exc), "error")
         return redirect(url_for("listar_transacoes"))

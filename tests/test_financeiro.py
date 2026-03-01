@@ -64,12 +64,11 @@ class FlaskRoutesTestCase(unittest.TestCase):
                 "descricao": "Freela",
                 "valor": "1200",
                 "categoria": "Trabalho",
-                "data": "2026-10-10",
-            },
+                            },
             follow_redirects=True,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Transação adicionada com sucesso.", response.get_data(as_text=True))
+        self.assertIn("Transação adicionada com sucesso (data automática de hoje).", response.get_data(as_text=True))
 
         db = FinanceDB(self.db_path)
         transacoes = list(db.listar_transacoes())
