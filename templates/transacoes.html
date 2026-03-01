@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<section>
+  <h2>Nova Transação</h2>
+  <form method="post" action="{{ url_for('criar_transacao') }}" class="grid">
+    <label>Tipo
+      <select name="tipo" required>
+        <option value="receita">Receita</option>
+        <option value="despesa">Despesa</option>
+      </select>
+    </label>
+    <label>Descrição<input name="descricao" required /></label>
+    <label>Valor<input name="valor" type="number" step="0.01" min="0.01" required /></label>
+    <label>Categoria<input name="categoria" required /></label>
+    <div class="auto-date-box">Data automática: <strong>{{ hoje }}</strong></div>
+    <button type="submit" class="btn-green">Salvar transação</button>
+  </form>
+</section>
+
+<section>
+  <h2>Filtros</h2>
+  <form method="get" action="{{ url_for('listar_transacoes') }}" class="grid">
+    <label>Tipo
+      <select name="tipo">
+        <option value="">Todos</option>
+        <option value="receita" {% if filtros.tipo == 'receita' %}selected{% endif %}>Receita</option>
+        <option value="despesa" {% if filtros.tipo == 'despesa' %}selected{% endif %}>Despesa</option>
+      </select>
+    </label>
+    <label>Mês<input name="mes" type="number" min="1" max="12" value="{{ filtros.mes or '' }}" /></label>
+    <label>Ano<input name="ano" type="number" min="1900" value="{{ filtros.ano or '' }}" /></label>
+    <button type="submit" class="btn-dark">Aplicar filtros</button>
+  </form>
+
+  <p><strong class="txt-green">Receitas:</strong> R$ {{ '%.2f'|format(resumo.receitas) }} | <strong class="txt-red">Despesas:</strong> R$ {{ '%.2f'|format(resumo.despesas) }} | <strong>Saldo:</strong> R$ {{ '%.2f'|format(resumo.saldo) }}</p>
+
+  {% if transacoes %}
+    <table>
+      <thead>
+        <tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr>
+      </thead>
+      <tbody>
+        {% for t in transacoes %}
+          <tr>
+            <td>{{ t.data }}</td>
+            <td>
+              <span class="pill {% if t.tipo == 'receita' %}pill-green{% else %}pill-red{% endif %}">
+                {{ t.tipo }}
+              </span>
+            </td>
+            <td>{{ t.descricao }}</td>
+            <td>{{ t.categoria }}</td>
+            <td class="{% if t.tipo == 'receita' %}txt-green{% else %}txt-red{% endif %}">R$ {{ '%.2f'|format(t.valor) }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Nenhuma transação encontrada.</p>
+  {% endif %}
+</section>
+{% endblock %}

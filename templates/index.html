@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="cards">
+  <article class="card card-green-soft">
+    <h2>Receitas</h2>
+    <p class="txt-green">R$ {{ '%.2f'|format(resumo.receitas) }}</p>
+  </article>
+  <article class="card card-red-soft">
+    <h2>Despesas</h2>
+    <p class="txt-red">R$ {{ '%.2f'|format(resumo.despesas) }}</p>
+  </article>
+  <article class="card">
+    <h2>Saldo</h2>
+    <p>R$ {{ '%.2f'|format(resumo.saldo) }}</p>
+  </article>
+  <article class="card">
+    <h2>Orçamento ({{ '%02d'|format(mes) }}/{{ ano }})</h2>
+    <p>
+      {% if orcamento is not none %}
+        R$ {{ '%.2f'|format(orcamento) }}
+      {% else %}
+        Não definido
+      {% endif %}
+    </p>
+  </article>
+</section>
+
+<section>
+  <h2>Transações do mês atual</h2>
+  {% if transacoes %}
+    <table>
+      <thead>
+        <tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr>
+      </thead>
+      <tbody>
+        {% for t in transacoes %}
+        <tr>
+          <td>{{ t.data }}</td>
+          <td><span class="pill {% if t.tipo == 'receita' %}pill-green{% else %}pill-red{% endif %}">{{ t.tipo }}</span></td>
+          <td>{{ t.descricao }}</td>
+          <td>{{ t.categoria }}</td>
+          <td class="{% if t.tipo == 'receita' %}txt-green{% else %}txt-red{% endif %}">R$ {{ '%.2f'|format(t.valor) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Nenhuma transação neste mês.</p>
+  {% endif %}
+</section>
+{% endblock %}
