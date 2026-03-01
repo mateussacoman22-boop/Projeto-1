@@ -1,36 +1,40 @@
-# Sistema de Controle Financeiro
+# Sistema de Controle Financeiro (Flask)
 
-Aplicação de linha de comando para registrar receitas e despesas, definir orçamento mensal e acompanhar saldo acumulado.
+Aplicação web completa em Python + Flask para controle financeiro pessoal, com persistência em SQLite.
 
 ## Funcionalidades
 
-- Cadastro de transações (`receita` e `despesa`) com descrição, valor, data e categoria.
-- Listagem de transações com filtros opcionais por tipo, mês e ano.
-- Resumo financeiro com totais de receitas, despesas e saldo.
+- Cadastro de receitas e despesas (descrição, valor, categoria e data).
+- Dashboard com resumo do mês atual (receitas, despesas e saldo).
+- Listagem e filtro de transações por tipo, mês e ano.
 - Definição e consulta de orçamento mensal.
 
-## Estrutura
+## Requisitos
 
-- `src/financeiro.py`: lógica de domínio e persistência em SQLite.
-- `src/cli.py`: interface de linha de comando.
-- `tests/test_financeiro.py`: testes automatizados.
+- Python 3.10+
+- Dependências em `requirements.txt`
 
-## Como executar
-
-```bash
-python -m src.cli --help
-```
-
-### Exemplos
+## Instalação
 
 ```bash
-python -m src.cli adicionar --tipo receita --descricao "Salário" --valor 5000 --categoria Trabalho
-python -m src.cli adicionar --tipo despesa --descricao "Aluguel" --valor 1800 --categoria Moradia
-python -m src.cli listar --mes 10 --ano 2026
-python -m src.cli resumo --mes 10 --ano 2026
-python -m src.cli definir-orcamento --mes 10 --ano 2026 --valor 3500
-python -m src.cli orcamento --mes 10 --ano 2026
+pip install -r requirements.txt
 ```
+
+## Executar no Linux/macOS
+
+```bash
+python -m flask --app app run --host=0.0.0.0 --port=5000
+```
+
+## Executar no Windows (.bat)
+
+Basta dar duplo clique em `run_financeiro.bat` ou executar no terminal:
+
+```bat
+run_financeiro.bat
+```
+
+Acesse: `http://localhost:5000`
 
 ## Testes
 

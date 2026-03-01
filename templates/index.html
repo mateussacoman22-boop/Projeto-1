@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="cards">
+  <article class="card">
+    <h2>Receitas</h2>
+    <p>R$ {{ '%.2f'|format(resumo.receitas) }}</p>
+  </article>
+  <article class="card">
+    <h2>Despesas</h2>
+    <p>R$ {{ '%.2f'|format(resumo.despesas) }}</p>
+  </article>
+  <article class="card">
+    <h2>Saldo</h2>
+    <p>R$ {{ '%.2f'|format(resumo.saldo) }}</p>
+  </article>
+  <article class="card">
+    <h2>Orçamento ({{ '%02d'|format(mes) }}/{{ ano }})</h2>
+    <p>
+      {% if orcamento is not none %}
+        R$ {{ '%.2f'|format(orcamento) }}
+      {% else %}
+        Não definido
+      {% endif %}
+    </p>
+  </article>
+</section>
+
+<section>
+  <h2>Transações do mês atual</h2>
+  {% if transacoes %}
+    <table>
+      <thead>
+        <tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr>
+      </thead>
+      <tbody>
+        {% for t in transacoes %}
+        <tr>
+          <td>{{ t.data }}</td>
+          <td>{{ t.tipo }}</td>
+          <td>{{ t.descricao }}</td>
+          <td>{{ t.categoria }}</td>
+          <td>R$ {{ '%.2f'|format(t.valor) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Nenhuma transação neste mês.</p>
+  {% endif %}
+</section>
+{% endblock %}
