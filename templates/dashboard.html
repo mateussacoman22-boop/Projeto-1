@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="filters card">
+  <form method="get" class="inline-form">
+    <label>Month <input type="number" min="1" max="12" name="month" value="{{ month }}"></label>
+    <label>Year <input type="number" min="2000" max="2100" name="year" value="{{ year }}"></label>
+    <button class="btn" type="submit">Apply filters</button>
+  </form>
+</section>
+
+<section class="metrics-grid">
+  <article class="card metric"><h3>Total Balance</h3><p>${{ '%.2f'|format(balance_total) }}</p></article>
+  <article class="card metric"><h3>{{ month_label }} Income</h3><p>${{ '%.2f'|format(income_total) }}</p></article>
+  <article class="card metric"><h3>{{ month_label }} Expenses</h3><p>${{ '%.2f'|format(expense_total) }}</p></article>
+  <article class="card metric"><h3>Vs Previous Month</h3><p>Income: ${{ '%.2f'|format(income_total - prev_income) }} / Expense: ${{ '%.2f'|format(expense_total - prev_expense) }}</p></article>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <h3>Create financial record</h3>
+    <form method="post" action="{{ url_for('create_record') }}" class="form">
+      <label>Date <input type="date" name="date" required></label>
+      <label>Amount <input type="number" step="0.01" name="amount" required></label>
+      <label>Category
+        <select name="category_id" required>
+          {% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Type
+        <select name="kind"><option value="income">Income</option><option value="expense">Expense</option></select>
+      </label>
+      <label>Fixed / Variable
+        <select name="recurrence_type"><option value="fixed">Fixed</option><option value="variable">Variable</option></select>
+      </label>
+      <label>Payment method
+        <select name="payment_method">{% for method in payment_methods %}<option value="{{ method }}">{{ method }}</option>{% endfor %}</select>
+      </label>
+      <label>Notes <textarea name="notes"></textarea></label>
+      <button class="btn" type="submit">Save</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <h3>Budget planning</h3>
+    <form method="post" action="{{ url_for('set_budget') }}" class="form">
+      <label>Month <input type="number" name="month" min="1" max="12" value="{{ month }}"></label>
+      <label>Year <input type="number" name="year" value="{{ year }}"></label>
+      <label>Category <select name="category_id">{% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></label>
+      <label>Limit amount <input type="number" step="0.01" name="limit_amount" required></label>
+      <button class="btn" type="submit">Set budget</button>
+    </form>
+
+    <h4>Budget alerts</h4>
+    <ul>
+      {% for item in budget_status %}
+      <li><strong>{{ item.category }}</strong>: ${{ '%.2f'|format(item.spent) }} / ${{ '%.2f'|format(item.limit) }} ({{ item.percentage }}%) — <span class="badge {{ item.alert|lower|replace(' ','-') }}">{{ item.alert }}</span></li>
+      {% else %}
+      <li>No budgets defined for this month.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+
+<section class="card charts-grid">
+  <h3>Advanced Visualization Dashboard</h3>
+  <div class="chart-row">
+    <canvas id="pieChart"></canvas>
+    <canvas id="barChart"></canvas>
+  </div>
+  <div class="chart-row">
+    <canvas id="lineChart"></canvas>
+    <canvas id="spendingShareChart"></canvas>
+  </div>
+</section>
+
+<section class="card">
+  <h3>Categories</h3>
+  <form method="post" action="{{ url_for('add_category') }}" class="inline-form">
+    <input type="text" name="name" placeholder="New category name" required>
+    <button class="btn" type="submit">Add category</button>
+  </form>
+</section>
+
+<section class="card">
+  <h3>Monthly Records</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date</th><th>Amount</th><th>Category</th><th>Kind</th><th>Type</th><th>Payment</th><th>Notes</th><th>Actions</th></tr></thead>
+      <tbody>
+      {% for r in records %}
+      <tr>
+        <td>{{ r.date }}</td><td>${{ '%.2f'|format(r.amount) }}</td><td>{{ r.category.name }}</td><td>{{ r.kind }}</td><td>{{ r.recurrence_type }}</td><td>{{ r.payment_method }}</td><td>{{ r.notes }}</td>
+        <td class="actions">
+          <details>
+            <summary>Edit</summary>
+            <form method="post" action="{{ url_for('edit_record', record_id=r.id) }}" class="form small">
+              <input type="date" name="date" value="{{ r.date }}" required>
+              <input type="number" step="0.01" name="amount" value="{{ r.amount }}" required>
+              <select name="category_id">{% for c in categories %}<option value="{{ c.id }}" {% if c.id == r.category_id %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select>
+              <select name="kind"><option value="income" {% if r.kind == 'income' %}selected{% endif %}>Income</option><option value="expense" {% if r.kind == 'expense' %}selected{% endif %}>Expense</option></select>
+              <select name="recurrence_type"><option value="fixed" {% if r.recurrence_type == 'fixed' %}selected{% endif %}>Fixed</option><option value="variable" {% if r.recurrence_type == 'variable' %}selected{% endif %}>Variable</option></select>
+              <select name="payment_method">{% for method in payment_methods %}<option value="{{ method }}" {% if method == r.payment_method %}selected{% endif %}>{{ method }}</option>{% endfor %}</select>
+              <input type="text" name="notes" value="{{ r.notes }}">
+              <button class="btn" type="submit">Update</button>
+            </form>
+          </details>
+          <form method="post" action="{{ url_for('delete_record', record_id=r.id) }}">
+            <button class="btn btn-danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8">No records for selected period.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+window.dashboardData = {
+  expensesByCategory: {{ expenses_by_category|tojson }},
+  monthlyTrend: {{ monthly_trend|tojson }},
+  balanceEvolution: {{ balance_evolution|tojson }}
+};
+</script>
+{% endblock %}
