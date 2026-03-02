@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+  <h2>Personal & Family Financial Control</h2>
+  <p>Track your income, expenses, budgets, and cashflow with an advanced dashboard.</p>
+  <div class="row">
+    <a class="btn" href="{{ url_for('login') }}">Login</a>
+    <a class="btn btn-outline" href="{{ url_for('register') }}">Create account</a>
+  </div>
+</section>
+{% endblock %}

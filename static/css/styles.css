@@ -1,0 +1,44 @@
+:root {
+  --bg: #f4f7fb;
+  --text: #1b2a41;
+  --card: #ffffff;
+  --primary: #155eef;
+  --success: #17b26a;
+  --danger: #f04438;
+}
+[data-theme="dark"] {
+  --bg: #121924;
+  --text: #e2e8f0;
+  --card: #1f2937;
+  --primary: #4f8cff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--text); }
+.topbar { display: flex; justify-content: space-between; padding: 1rem 1.5rem; background: var(--card); align-items: center; }
+.container { max-width: 1200px; margin: 1rem auto; padding: 0 1rem 2rem; }
+.card { background: var(--card); border-radius: 14px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.grid-2 { display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+.chart-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.form { display: grid; gap: .6rem; }
+.inline-form { display: flex; gap: .8rem; flex-wrap: wrap; align-items: end; }
+label { display: grid; gap: .3rem; font-size: .9rem; }
+input, select, textarea, button { padding: .6rem; border-radius: 8px; border: 1px solid #cbd5e1; }
+.btn { background: var(--primary); color: white; border: none; text-decoration: none; display: inline-block; cursor: pointer; }
+.btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+.btn-danger { background: var(--danger); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border-bottom: 1px solid #e5e7eb; padding: .5rem; text-align: left; }
+.flash { padding: .7rem 1rem; border-radius: 8px; margin-bottom: .6rem; }
+.flash.success { background: #d1fadf; }
+.flash.danger { background: #fee4e2; }
+.flash.info { background: #dbeafe; }
+.badge { padding: .15rem .4rem; border-radius: 999px; font-size: .8rem; }
+.badge.exceeded { background: #fee4e2; color: #b42318; }
+.badge.near-limit { background: #fef0c7; color: #b54708; }
+.badge.on-track { background: #dcfae6; color: #067647; }
+.hero { text-align: center; padding: 3rem 1rem; }
+.row { display:flex; justify-content:center; gap:.7rem; }
+.actions { min-width: 180px; }
+@media (max-width: 768px){ .topbar h1 {font-size:1.2rem;} }
